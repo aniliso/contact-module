@@ -1,5 +1,5 @@
 {
-  "name": "asgardcms/contact",
+  "name": "sagsoz06/contact",
   "description": "A module to create small contacts of content to display anywhere on the site.",
   "type": "asgard-module",
   "license": "MIT",
@@ -13,11 +13,5 @@
       "Modules\\": "Modules/"
     }
   },
-  "authors": [
-    {
-      "name": "Ufooo",
-      "email": "ufooo@netipar.hu"
-    }
-  ],
   "minimum-stability": "dev"
 }

@@ -51,7 +51,6 @@ class PublicController extends BasePublicController
 
         foreach (\LaravelLocalization::getSupportedLocales() as $locale => $supportedLocale)
         {
-            if($locale == locale()) continue;
             $this->addAlternateUrl($locale, url(getURLFromRouteNameTranslated($locale, 'contact::routes.contact')));
         }
         /* End Seo */

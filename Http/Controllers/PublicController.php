@@ -63,12 +63,13 @@ class PublicController extends BasePublicController
 
     public function send(Mailer $mailer, ContactRequest $request)
     {
-        $mailer->send(config('asgard.contact.config.mail.views'), $request->all(), function ($message) {
+        $mailer->send(config('asgard.contact.config.mail.views'), $request->all(), function ($message) use ($request) {
             $message->to(
                 $this->setting->get('contact::contact-to-email', locale()),
                 $this->setting->get('contact::contact-to-name', locale())
             );
             $message->subject($this->setting->get('contact::contact-to-subject', locale()));
+            $message->replyTo($request->email, "{$request->first_name} {$request->last_name}");
         });
 
         //$this->contact->create($request->all());

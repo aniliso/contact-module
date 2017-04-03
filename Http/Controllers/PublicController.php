@@ -42,17 +42,13 @@ class PublicController extends BasePublicController
             ->setDescription($title);
 
         $this->setUrl($url)
-            ->addMeta('robots', "index, follow");
+            ->addMeta('robots', "index, follow")
+            ->addAlternates($this->getAlternateLanguages('contact::routes.contact'));
 
         $this->seoGraph()->setTitle($title)
             ->setUrl($url);
 
         $this->seoCard()->setType('app');
-
-        foreach (\LaravelLocalization::getSupportedLocales() as $locale => $supportedLocale)
-        {
-            $this->addAlternateUrl($locale, url(getURLFromRouteNameTranslated($locale, 'contact::routes.contact')));
-        }
         /* End Seo */
 
         /* Start Breadcrumbs */

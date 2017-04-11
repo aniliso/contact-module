@@ -72,31 +72,35 @@ class ContactServiceProvider extends ServiceProvider
     {
         \Widget::register('gmap', function ($height, $zoom, $marker='') {
             if(setting('theme::address')) {
-                \Mapper::setLanguage(locale());
-                \Mapper::setRegion('TR');
-                if($marker) {
-                    \Mapper::setIcon(\Theme::url($marker));
+                if(!$map = \Cache::get('contact.map')) {
+                    \Mapper::setLanguage(locale());
+                    \Mapper::setRegion('TR');
+                    if($marker) {
+                        \Mapper::setIcon(\Theme::url($marker));
+                    }
+                    \Mapper::setAnimation('DROP');
+                    $location = \Mapper::location(strip_tags(setting('theme::address')));
+                    $location->map([
+                        'height'            => $height,
+                        'zoom'              => $zoom,
+                        'async'             => true,
+                        'center'            => true,
+                        'marker'            => true,
+                        'type'              => 'ROADMAP',
+                        'draggable'         => false,
+                        'scrollWheelZoom'   => false,
+                        'fullscreenControl' => false,
+                        'zoomControl'       => false,
+                        'streetViewControl' => false,
+                        'content'           => setting('theme::company-name')."<br/>".setting('theme::address'),
+                        'markers'           => [
+                            'title' => setting('theme::company-name')
+                        ]
+                    ]);
+                    $map = \Mapper::render();
+                    \Cache::put('contact.map', $map, 3600);
                 }
-                \Mapper::setAnimation('DROP');
-                $location = \Mapper::location(strip_tags(setting('theme::address')));
-                $location->map([
-                    'height'            => $height,
-                    'zoom'              => $zoom,
-                    'async'             => true,
-                    'center'            => true,
-                    'marker'            => true,
-                    'type'              => 'ROADMAP',
-                    'draggable'         => false,
-                    'scrollWheelZoom'   => false,
-                    'fullscreenControl' => false,
-                    'zoomControl'       => false,
-                    'streetViewControl' => false,
-                    'content'           => setting('theme::company-name')."<br/>".setting('theme::address'),
-                    'markers'           => [
-                        'title' => setting('theme::company-name')
-                    ]
-                ]);
-                return \Mapper::render();
+                return $map;
             }
         });
     }

@@ -14,6 +14,7 @@ return [
         'title'                => 'Başlık',
         'first_name'           => 'Adınız',
         'last_name'            => 'Soyadınız',
+        'phone'                => 'Telefon',
         'email'                => 'E-Posta',
         'enquiry'              => 'Mesajınız',
         'g-recaptcha-response' => 'Doğrulama Kodu',

@@ -2,7 +2,7 @@
 
 return [
     'title'        => [
-        'contacts'            => 'Contacts',
+        'contacts'            => 'Kontact',
         'contact-information' => 'Contact Information',
         'contact-form'        => 'Contact Form',
         'online'              => 'Guest Login',
@@ -10,15 +10,14 @@ return [
         'edit contact'        => 'Edit Contact'
     ],
     'form'         => [
-        'name'                 => 'Your name',
-        'title'                => 'Title',
-        'first_name'           => 'First name',
-        'last_name'            => 'Last name',
-        'phone'                => 'Phone',
+        'name'                 => 'Ihr Name',
+        'title'                => 'Titel',
+        'first_name'           => 'Vorname',
+        'last_name'            => 'Nachname',
         'email'                => 'Email',
-        'enquiry'              => 'Your message',
-        'g-recaptcha-response' => 'Security Code',
-        'submit'               => 'Send!',
+        'enquiry'              => 'Ihre Nachricht',
+        'g-recaptcha-response' => 'Sicherheits-Code',
+        'submit'               => 'Senden!',
     ],
     'button'       => [
         'create contact' => 'Add Contact'

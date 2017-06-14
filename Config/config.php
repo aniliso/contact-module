@@ -12,6 +12,9 @@ return [
         'email'      => [
             'type' => 'text',
         ],
+        'phone'      => [
+            'type' => 'text',
+        ],
         'enquiry'    => [
             'type' => 'textarea',
         ],
@@ -19,6 +22,7 @@ return [
     'rules'  => [
         'first_name'           => 'required',
         'last_name'            => 'required',
+        'phone'                => 'required',
         'email'                => 'required|email',
         'enquiry'              => 'required',
         'g-recaptcha-response' => 'required|captcha'

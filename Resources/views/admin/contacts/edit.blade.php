@@ -11,10 +11,9 @@
     </ol>
 @stop
 
-@section('styles')
-    {!! Theme::script('js/vendor/ckeditor/ckeditor.js') !!}
+@push('css-stack')
     {!! Theme::style('css/vendor/iCheck/flat/blue.css') !!}
-@stop
+@endpush
 
 @section('content')
     {!! Form::open(['route' => ['admin.contact.contact.update', $contact->id], 'method' => 'put']) !!}
@@ -46,6 +45,7 @@
                 </div>
             </div>
         </div>
+    </div>
     {!! Form::close() !!}
 @stop
 
@@ -59,7 +59,7 @@
     </dl>
 @stop
 
-@section('scripts')
+@push('js-stack')
     <script type="text/javascript">
         $( document ).ready(function() {
             $(document).keypressAction({
@@ -87,4 +87,4 @@
             });
         });
     </script>
-@stop
+@endpush

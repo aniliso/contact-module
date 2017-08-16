@@ -3,14 +3,17 @@
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Modules\Contact\Entities\Contact;
+use Modules\Contact\Events\Handlers\RegisterContactSidebar;
 use Modules\Contact\Repositories\Cache\CacheContactDecorator;
 use Modules\Contact\Repositories\Eloquent\EloquentContactRepository;
+use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Foundation\Theme\Theme;
+use Modules\Core\Traits\CanGetSidebarClassForModule;
 use Modules\Core\Traits\CanPublishConfiguration;
 
 class ContactServiceProvider extends ServiceProvider
 {
-    use CanPublishConfiguration;
+    use CanPublishConfiguration, CanGetSidebarClassForModule;
     /**
      * Indicates if loading of the provider is deferred.
      * @var bool
@@ -26,6 +29,11 @@ class ContactServiceProvider extends ServiceProvider
         $this->registerBindings();
         $this->registerFacade();
         $this->registerWidgets();
+
+        $this->app['events']->listen(
+            BuildingSidebar::class,
+            $this->getSidebarClassForModule('contact', RegisterContactSidebar::class)
+        );
     }
 
     public function boot()

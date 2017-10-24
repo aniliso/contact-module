@@ -30,6 +30,8 @@ class ContactServiceProvider extends ServiceProvider
         $this->registerFacade();
         $this->registerWidgets();
 
+        $this->app->register(\Cornford\Googlmapper\MapperServiceProvider::class);
+
         $this->app['events']->listen(
             BuildingSidebar::class,
             $this->getSidebarClassForModule('contact', RegisterContactSidebar::class)

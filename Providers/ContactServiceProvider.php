@@ -32,6 +32,9 @@ class ContactServiceProvider extends ServiceProvider
 
         $this->app->register(\Cornford\Googlmapper\MapperServiceProvider::class);
 
+        $aliasLoader = AliasLoader::getInstance();
+        $aliasLoader->alias('Mapper', \Cornford\Googlmapper\Facades\MapperFacade::class);
+
         $this->app['events']->listen(
             BuildingSidebar::class,
             $this->getSidebarClassForModule('contact', RegisterContactSidebar::class)

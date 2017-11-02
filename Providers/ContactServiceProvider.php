@@ -35,6 +35,11 @@ class ContactServiceProvider extends ServiceProvider
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Mapper', \Cornford\Googlmapper\Facades\MapperFacade::class);
 
+        $this->app->extend('asgard.ModulesList', function($app) {
+            array_push($app, 'contact');
+            return $app;
+        });
+
         $this->app['events']->listen(
             BuildingSidebar::class,
             $this->getSidebarClassForModule('contact', RegisterContactSidebar::class)

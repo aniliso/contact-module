@@ -88,7 +88,7 @@ class ContactServiceProvider extends ServiceProvider
 
     private function registerWidgets()
     {
-        \Widget::register('gmap', function ($height, $zoom, $marker='') {
+        \Widget::register('gmap', function ($height, $zoom, $marker='', $streetView=false) {
             if(setting('theme::address')) {
                 if(!$map = \Cache::get('contact.map')) {
                     \Mapper::setLanguage(locale());
@@ -97,7 +97,7 @@ class ContactServiceProvider extends ServiceProvider
                         \Mapper::setIcon(\Theme::url($marker));
                     }
                     \Mapper::setAnimation('DROP');
-                    $location = \Mapper::location(strip_tags(setting('theme::address')));
+                    $location = \Mapper::location(strip_tags(setting('theme::address')));;
                     $location->map([
                         'height'            => $height,
                         'zoom'              => $zoom,
@@ -115,6 +115,7 @@ class ContactServiceProvider extends ServiceProvider
                             'title' => setting('theme::company-name')
                         ]
                     ]);
+                    if($streetView) \Mapper::streetview($location->getLatitude(), $location->getLongitude(), 1, 1);
                     $map = \Mapper::render();
                     \Cache::put('contact.map', $map, 3600);
                 }

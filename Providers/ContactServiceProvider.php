@@ -88,7 +88,7 @@ class ContactServiceProvider extends ServiceProvider
 
     private function registerWidgets()
     {
-        \Widget::register('gmap', function ($height, $zoom, $marker='', $streetView=false) {
+        \Widget::register('gmap', function ($height, $zoom, $marker='', array $options=[]) {
             if(setting('theme::address')) {
                 if(!$map = \Cache::get('contact.map')) {
                     \Mapper::setLanguage(locale());
@@ -105,19 +105,20 @@ class ContactServiceProvider extends ServiceProvider
                         'center'            => true,
                         'marker'            => true,
                         'type'              => 'ROADMAP',
-                        'draggable'         => false,
-                        'scrollWheelZoom'   => false,
-                        'fullscreenControl' => false,
-                        'zoomControl'       => false,
+                        'draggable'         => isset($options['draggable']) ? $options['draggable'] : false,
+                        'scrollWheelZoom'   => isset($options['scrollzoom']) ? $options['scrollzoom'] : false,
+                        'fullscreenControl' => isset($options['fullscreen']) ? $options['fullscreen'] : false,
+                        'zoomControl'       => isset($options['zoomcontrol']) ? $options['zoomcontrol'] : false,
                         'streetViewControl' => false,
                         'content'           => setting('theme::company-name')."<br/>".setting('theme::address'),
                         'markers'           => [
                             'title' => setting('theme::company-name')
                         ]
                     ]);
-                    if($streetView) \Mapper::streetview($location->getLatitude(), $location->getLongitude(), 1, 1);
-                    $map = \Mapper::render();
-                    \Cache::put('contact.map', $map, 3600);
+                    if(isset($options['streetview']))
+                        \Mapper::streetview($location->getLatitude(), $location->getLongitude(), 250, 1, ['ui'=>false, 'zoom'=>1]);
+                        $map = \Mapper::render();
+                        \Cache::put('contact.map', $map, 3600);
                 }
                 return $map;
             }

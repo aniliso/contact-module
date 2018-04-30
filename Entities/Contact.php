@@ -9,11 +9,11 @@ class Contact extends Model
 
     protected $presenter = 'Modules\Contact\Presenters\ContactPresenter';
     protected $table     = 'contacts';
-    protected $fillable  = [];
+    protected $fillable  = ['ip'];
 
     public function __construct(array $attributes = [])
     {
-        $this->fillable = array_keys(config('asgard.contact.config.fields'));
+        $this->fillable = array_merge($this->fillable, array_keys(config('asgard.contact.config.fields')));
         parent::__construct($attributes);
     }
 }

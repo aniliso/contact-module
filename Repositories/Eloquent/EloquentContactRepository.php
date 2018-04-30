@@ -13,6 +13,7 @@ class EloquentContactRepository extends EloquentBaseRepository implements Contac
      */
     public function create($data)
     {
+        $data['ip'] = request()->getClientIp();
         return $this->model->create($data);
     }
 

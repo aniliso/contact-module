@@ -11,6 +11,11 @@ return [
         'view'         => 'text',
         'translatable' => true,
     ],
+    'contact-to-cc' => [
+        'description'  => 'contact::settings.contact-to-cc',
+        'view'         => 'text',
+        'translatable' => false,
+    ],
     'contact-to-subject' => [
         'description'  => 'contact::settings.contact-to-subject',
         'view'         => 'text',

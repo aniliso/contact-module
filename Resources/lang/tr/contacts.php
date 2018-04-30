@@ -20,6 +20,7 @@ return [
         'g-recaptcha-response' => 'Doğrulama Kodu',
         'submit'               => 'Gönder',
         'terms'                => 'Şartlar',
+        'ip'                   => 'IP Adresi',
     ],
     'button'           => [
         'create contact' => 'İletişim Ekle'

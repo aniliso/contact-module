@@ -27,7 +27,6 @@ class ContactServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBindings();
-        $this->registerFacade();
         $this->registerWidgets();
 
         $this->app->register(\Cornford\Googlmapper\MapperServiceProvider::class);
@@ -78,12 +77,6 @@ class ContactServiceProvider extends ServiceProvider
                 return new CacheContactDecorator($repository);
             }
         );
-    }
-
-    private function registerFacade()
-    {
-        $aliasLoader = AliasLoader::getInstance();
-        $aliasLoader->alias('Contact', 'Modules\Contact\Facades\ContactFacade');
     }
 
     private function registerWidgets()

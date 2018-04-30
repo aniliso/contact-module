@@ -13,8 +13,6 @@ class EloquentContactRepository extends EloquentBaseRepository implements Contac
      */
     public function create($data)
     {
-        $this->sluggify($data);
-
         return $this->model->create($data);
     }
 

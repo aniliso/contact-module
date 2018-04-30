@@ -18,30 +18,26 @@
 @section('content')
     {!! Form::open(['route' => ['admin.contact.contact.update', $contact->id], 'method' => 'put']) !!}
     <div class="row">
-        <div class="col-md-10">
-            <div class="nav-tabs-custom">
-                @include('partials.form-tab-headers')
-                <div class="tab-content">
-                    <?php $i = 0; ?>
-                    <?php foreach (LaravelLocalization::getSupportedLocales() as $locale => $language): ?>
-                    <?php $i++; ?>
-                    <div class="tab-pane {{ App::getLocale() == $locale ? 'active' : '' }}" id="tab_{{ $i }}">
-                        @include('contact::admin.contacts.partials.edit-fields', ['lang' => $locale])
-                    </div>
-                    <?php endforeach; ?>
-
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary btn-flat">{{ trans('core::core.button.update') }}</button>
-                        <button class="btn btn-default btn-flat" name="button" type="reset">{{ trans('core::core.button.reset') }}</button>
-                        <a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.contact.contact.index')}}"><i class="fa fa-times"></i> {{ trans('core::core.button.cancel') }}</a>
-                    </div>
-                </div>
-            </div> {{-- end nav-tabs-custom --}}
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-body">
-                    {!! Form::normalInput('name', trans('contact::contacts.form.name'), $errors, $contact) !!}
+                    <table class="table table-striped">
+                        <tr>
+                            <th>{{ trans('contact::contacts.title.contacts') }} No</th>
+                            <td>{{ $contact->id }}</td>
+                        </tr>
+                        @foreach(app(\Modules\Contact\Entities\Contact::class)->getFillable() as $fillable)
+                        <tr>
+                            <th class="col-md-2">{{ trans('contact::contacts.form.'.$fillable) }}</th>
+                            <td class="col-md-10">{!! $contact->{$fillable} !!}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                <div class="box-footer">
+                    {{--<button type="submit" class="btn btn-primary btn-flat">{{ trans('core::core.button.update') }}</button>--}}
+                    {{--<button class="btn btn-default btn-flat" name="button" type="reset">{{ trans('core::core.button.reset') }}</button>--}}
+                    <a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.contact.contact.index')}}"><i class="fa fa-times"></i> {{ trans('core::core.button.cancel') }}</a>
                 </div>
             </div>
         </div>

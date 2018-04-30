@@ -1,9 +1,7 @@
 <?php namespace Modules\Contact\Http\Controllers\Admin;
 
-use Laracasts\Flash\Flash;
 use Modules\Contact\Entities\Contact;
-use Modules\Contact\Http\Requests\CreateContactRequest;
-use Modules\Contact\Http\Requests\UpdateContactRequest;
+use Modules\Contact\Http\Requests\ContactRequest;
 use Modules\Contact\Repositories\ContactRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 
@@ -17,18 +15,38 @@ class ContactController extends AdminBaseController
     public function __construct(ContactRepository $contact)
     {
         parent::__construct();
-
         $this->contact = $contact;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \View
      */
     public function index()
     {
-        $contacts = $this->contact->all();
+        $contacts = Contact::query();
+        if(request()->ajax()) {
+            return \Datatables::of($contacts)
+                ->addColumn('action', function ($contact) {
+                    $action_buttons =   \Html::decode(link_to(
+                        route('admin.contact.contact.edit',
+                            [$contact->id]),
+                        '<i class="fa fa-search"></i>',
+                        ['class'=>'btn btn-default btn-flat']
+                    ));
+                    $action_buttons .=  \Html::decode(\Form::button(
+                        '<i class="fa fa-trash"></i>',
+                        ["data-toggle" => "modal",
+                         "data-action-target" => route("admin.contact.contact.destroy", [$contact->id]),
+                         "data-target" => "#modal-delete-confirmation",
+                         "class"=>"btn btn-danger btn-flat"]
+                    ));
+                    return $action_buttons;
+                })
+                ->escapeColumns([])
+                ->make(true);
+        }
 
         return view('contact::admin.contacts.index', compact('contacts'));
     }
@@ -36,7 +54,7 @@ class ContactController extends AdminBaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \View
      */
     public function create()
     {
@@ -46,23 +64,21 @@ class ContactController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreateContactRequest $request
-     * @return Response
+     * @param  ContactRequest $request
+     * @return \Redirect
      */
-    public function store(CreateContactRequest $request)
+    public function store(ContactRequest $request)
     {
         $this->contact->create($request->all());
 
-        Flash::success(trans('contact::contacts.messages.contact created'));
-
-        return redirect()->route('admin.contact.contact.index');
+        return redirect()->route('admin.contact.contact.index')->withSuccess(trans('contact::contacts.messages.contact created'));;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  Contact $contact
-     * @return Response
+     * @return \View
      */
     public function edit(Contact $contact)
     {
@@ -73,30 +89,26 @@ class ContactController extends AdminBaseController
      * Update the specified resource in storage.
      *
      * @param  Contact $contact
-     * @param  UpdateContactRequest $request
-     * @return Response
+     * @param  ContactRequest $request
+     * @return \Redirect
      */
-    public function update(Contact $contact, UpdateContactRequest $request)
+    public function update(Contact $contact, ContactRequest $request)
     {
         $this->contact->update($contact, $request->all());
 
-        Flash::success(trans('contact::contacts.messages.contact updated'));
-
-        return redirect()->route('admin.contact.contact.index');
+        return redirect()->route('admin.contact.contact.index')->withSuccess(trans('contact::contacts.messages.contact updated'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  Contact $contact
-     * @return Response
+     * @return \Redirect
      */
     public function destroy(Contact $contact)
     {
         $this->contact->destroy($contact);
 
-        Flash::success(trans('contact::contacts.messages.contact deleted'));
-
-        return redirect()->route('admin.contact.contact.index');
+        return redirect()->route('admin.contact.contact.index')->withSuccess(trans('contact::contacts.messages.contact deleted'));
     }
 }

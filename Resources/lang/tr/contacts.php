@@ -19,6 +19,7 @@ return [
         'enquiry'              => 'Mesajınız',
         'g-recaptcha-response' => 'Doğrulama Kodu',
         'submit'               => 'Gönder',
+        'terms'                => 'Şartlar',
     ],
     'button'           => [
         'create contact' => 'İletişim Ekle'

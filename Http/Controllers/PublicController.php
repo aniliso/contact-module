@@ -72,7 +72,7 @@ class PublicController extends BasePublicController
             $message->subject($this->setting->get('contact::contact-to-subject', locale()));
         });
 
-        //$this->contact->create($request->all());
+        $this->contact->create($request->all());
 
         return redirect($request->get('from'))->with('contact_form_message', trans('contact::contacts.sent_message'));
     }

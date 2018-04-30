@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@php $fillables = collect(app(\Modules\Contact\Entities\Contact::class)->getFillable()); @endphp
+
 @section('content-header')
     <h1>
         {{ trans('contact::contacts.title.contacts') }}
@@ -15,9 +17,9 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
-                    <a href="{{ URL::route('admin.contact.contact.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                    <!--<a href="{{ URL::route('admin.contact.contact.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
                         <i class="fa fa-pencil"></i> {{ trans('contact::contacts.button.create contact') }}
-                    </a>
+                    </a>-->
                 </div>
             </div>
             <div class="box box-primary">
@@ -29,8 +31,9 @@
                         <thead>
                         <tr>
                             <th>Id</th>
-                            <th>{{ trans('contact::contacts.title.online') }}</th>
-                            <th>{{ trans('contact::contacts.form.name') }}</th>
+                            @foreach($fillables->except('enquiry') as $fillable)
+                            <th>{{ trans('contact::contacts.form.'.$fillable) }}</th>
+                            @endforeach
                             <th>{{ trans('core::core.table.created at') }}</th>
                             <th>{{ trans('core::core.table.actions') }}</th>
                         </tr>
@@ -40,28 +43,19 @@
                         <?php foreach ($contacts as $contact): ?>
                         <tr>
                             <td>
-                                <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}">
-                                    {{ $contact->id }}
-                                </a>
+                                {{ $contact->id }}
                             </td>
+                            @foreach($fillables->except('enquiry') as $fillable)
                             <td>
-                                <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}">
-                                    {!! $contact->present()->onlineLabel !!}
-                                </a>
+                                {!! $contact->{$fillable} !!}
                             </td>
+                            @endforeach
                             <td>
-                                <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}">
-                                    {{ $contact->name }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}">
-                                    {{ $contact->created_at }}
-                                </a>
+                                {{ $contact->created_at }}
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}" class="btn btn-default btn-flat"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="{{ URL::route('admin.contact.contact.edit', [$contact->id]) }}" class="btn btn-default btn-flat"><i class="glyphicon glyphicon-search"></i></a>
                                     <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#confirmation-{{ $contact->id }}"><i class="glyphicon glyphicon-trash"></i></button>
                                 </div>
                             </td>
@@ -69,15 +63,6 @@
                         <?php endforeach; ?>
                         <?php endif; ?>
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>Id</th>
-                            <th>{{ trans('contact::contacts.title.online') }}</th>
-                            <th>{{ trans('contact::contacts.form.name') }}</th>
-                            <th>{{ trans('core::core.table.created at') }}</th>
-                            <th>{{ trans('core::core.table.actions') }}</th>
-                        </tr>
-                        </tfoot>
                     </table>
                     <!-- /.box-body -->
                 </div>
@@ -85,30 +70,7 @@
             </div>
         </div>
     </div>
-    <?php if (isset($contacts)): ?>
-    <?php foreach ($contacts as $contact): ?>
-    <!-- Modal -->
-    <div class="modal fade modal-danger" id="confirmation-{{ $contact->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ trans('core::core.modal.title') }}</h4>
-                </div>
-                <div class="modal-body">
-                    {{ trans('core::core.modal.confirmation-message') }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline btn-flat" data-dismiss="modal">{{ trans('core::core.button.cancel') }}</button>
-                    {!! Form::open(['route' => ['admin.contact.contact.destroy', $contact->id], 'method' => 'delete', 'class' => 'pull-left']) !!}
-                    <button type="submit" class="btn btn-outline btn-flat"><i class="glyphicon glyphicon-trash"></i> {{ trans('core::core.button.delete') }}</button>
-                    {!! Form::close() !!}
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endforeach; ?>
-    <?php endif; ?>
+    @include('core::partials.delete-modal')
 @stop
 
 @section('footer')
@@ -135,6 +97,9 @@
     <script type="text/javascript">
         $(function () {
             $('.data-table').dataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": '{{ route('admin.contact.contact.index') }}',
                 "paginate": true,
                 "lengthChange": true,
                 "filter": true,
@@ -145,13 +110,15 @@
                 "language": {
                     "url": '<?php echo Module::asset("core:js/vendor/datatables/{$locale}.json") ?>'
                 },
-                "columns": [
-                    null,
-                    null,
-                    null,
-                    null,
-                    { "sortable": false }
-                ]
+                columns: [
+                    {data: 'id', name: 'id'},
+                    @foreach($fillables->except('enquiry') as $fillable)
+                    {data: '{{ $fillable }}', name: '{{ $fillable }}'},
+                    @endforeach
+                    {data: 'created_at', name: 'created_at'},
+                    {data: 'action', name: 'action', orderable: false, searchable: true}
+                ],
+                stateSave: true
             });
         });
     </script>

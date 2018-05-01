@@ -17,6 +17,12 @@ class EloquentContactRepository extends EloquentBaseRepository implements Contac
         return $this->model->create($data);
     }
 
+    public function updateOrCreate($date)
+    {
+        $data['ip'] = request()->getClientIp();
+        return $this->model->updateOrCreate($data);
+    }
+
     /**
      * @param $model
      * @param  array $data

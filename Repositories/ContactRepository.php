@@ -17,4 +17,6 @@ interface ContactRepository extends BaseRepository
      * @return object
      */
     public function get($name);
+
+    public function updateOrCreate($data);
 }

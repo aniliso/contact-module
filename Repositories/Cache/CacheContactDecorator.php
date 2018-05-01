@@ -43,4 +43,11 @@ class CacheContactDecorator extends BaseCacheDecorator implements ContactReposit
                 }
             );
     }
+
+    public function updateOrCreate($data)
+    {
+        $this->cache->tags($this->entityName)->flush();
+
+        return $this->repository->updateOrCreate($data);
+    }
 }

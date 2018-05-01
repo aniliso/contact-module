@@ -20,5 +20,10 @@ return [
         'description'  => 'contact::settings.contact-to-subject',
         'view'         => 'text',
         'translatable' => true,
+    ],
+    'contact-email-check' => [
+        'description'  => 'contact::settings.contact-email-check',
+        'view'         => 'checkbox',
+        'translatable' => false,
     ]
 ];

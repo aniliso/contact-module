@@ -5,6 +5,8 @@ namespace Modules\Contact\Http\Controllers\Api;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\Response;
 use Modules\Contact\Http\Requests\ContactRequest;
+use Modules\Contact\Mail\ContactNotified;
+use Modules\Contact\Mail\GuestNotified;
 use Modules\Contact\Repositories\ContactRepository;
 use Modules\Core\Http\Controllers\BasePublicController;
 use Modules\Setting\Contracts\Setting;
@@ -36,7 +38,7 @@ class PublicController extends BasePublicController
         try {
             if($this->setting->get('contact::contact-email-check')) {
                 if($model = $this->contact->findByAttributes(['email'=>$request->get('email')])) {
-                    $this->_sendMail($mailer, $model, $request);
+                    $this->_sendMail($model);
                     return response()->json([
                         'success' => true,
                         'data'    => json_decode($model),
@@ -45,7 +47,7 @@ class PublicController extends BasePublicController
                 }
             }
             if($model = $this->contact->create($request->all())) {
-                $this->_sendMail($mailer, $model, $request);
+                $this->_sendMail($model);
             } else {
                 throw new \Exception(trans('themes::contact.messages.error'));
             }
@@ -64,26 +66,9 @@ class PublicController extends BasePublicController
         }
     }
 
-    private function _sendMail(Mailer $mailer, $model, $request)
+    private function _sendMail($model)
     {
-        $mailer->send('contact::emails.html.guest', $model->toArray(), function($message) use ($model) {
-            $message->to(
-                $model->email,
-                $model->first_name.' '.$model->last_name
-            );
-            $message->replyTo($this->setting->get('contact::contact-to-email', locale()), $this->setting->get('contact::contact-to-name', locale()));
-            $message->subject($this->setting->get('contact::contact-to-subject', locale()));
-        });
-        $mailer->send(config('asgard.contact.config.mail.views'), $request->all(), function ($message) use ($request) {
-            $message->to(
-                $this->setting->get('contact::contact-to-email', locale()),
-                $this->setting->get('contact::contact-to-name', locale())
-            );
-            if(!empty($this->setting->get('contact::contact-to-cc'))) {
-                $message->cc(explode(',', $this->setting->get('contact::contact-to-cc')));
-            }
-            $message->replyTo($request->email, $request->first_name.' '.$request->last_name);
-            $message->subject($this->setting->get('contact::contact-to-subject', locale()));
-        });
+        \Mail::to($model->email)->send(new GuestNotified($model));
+        \Mail::to(setting('contact::contact-to-email', locale()))->send(new ContactNotified($model));
     }
 }

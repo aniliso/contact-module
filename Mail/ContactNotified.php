@@ -35,6 +35,7 @@ class ContactNotified extends Mailable
     {
         $contact = $this->contact;
         return $this->view('contact::emails.html.enquiry')
+                    ->from(setting('contact::contact-to-email'), setting('contact::contact-to-name'))
                     ->replyTo($contact->email, $contact->first_name.' '.$contact->last_name)
                     ->cc(explode(',', setting('contact::contact-to-cc')))
                     ->subject(setting('contact::contact-to-subject', locale()))

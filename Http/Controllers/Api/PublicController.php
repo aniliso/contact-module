@@ -2,9 +2,12 @@
 
 namespace Modules\Contact\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\Response;
 use Modules\Contact\Http\Requests\ContactRequest;
+use Modules\Contact\Jobs\SendContactEmail;
+use Modules\Contact\Jobs\SendGuestEmail;
 use Modules\Contact\Mail\ContactNotified;
 use Modules\Contact\Mail\GuestNotified;
 use Modules\Contact\Repositories\ContactRepository;
@@ -68,7 +71,13 @@ class PublicController extends BasePublicController
 
     private function _sendMail($model)
     {
-        \Mail::to($model->email)->send(new GuestNotified($model));
-        \Mail::to(setting('contact::contact-to-email', locale()))->send(new ContactNotified($model));
+          SendContactEmail::dispatch($model)
+              ->delay(Carbon::now()->addSecond(10));
+
+          SendGuestEmail::dispatch($model)
+              ->delay(Carbon::now()->addSecond(15));
+
+//        \Mail::to(setting('contact::contact-to-email', locale()))->queue((new ContactNotified($model))->delay(30));
+//        \Mail::to($model->email)->queue((new GuestNotified($model))->delay(60));
     }
 }

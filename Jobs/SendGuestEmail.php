@@ -2,6 +2,7 @@
 
 namespace Modules\Contact\Jobs;
 
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Modules\Contact\Mail\GuestNotified;
 
 class SendGuestEmail implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels, Queueable;
+    use Dispatchable, InteractsWithQueue, SerializesModels, Queueable;
     /**
      * @var Contact
      */
@@ -35,6 +36,6 @@ class SendGuestEmail implements ShouldQueue
      */
     public function handle()
     {
-        \Mail::to($this->contact->email)->queue((new GuestNotified($this->contact))->delay(10));
+        \Mail::to($this->contact->email)->queue((new GuestNotified($this->contact))->delay(60));
     }
 }

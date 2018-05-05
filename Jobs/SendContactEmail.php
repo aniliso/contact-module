@@ -2,6 +2,7 @@
 
 namespace Modules\Contact\Jobs;
 
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Modules\Contact\Mail\ContactNotified;
 
 class SendContactEmail implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels, Queueable;
+    use Dispatchable, InteractsWithQueue, SerializesModels, Queueable;
     /**
      * @var Contact
      */
@@ -34,6 +35,6 @@ class SendContactEmail implements ShouldQueue
      */
     public function handle()
     {
-        \Mail::to(setting('contact::contact-to-email', locale()))->queue(new ContactNotified($this->contact));
+        \Mail::to(setting('contact::contact-to-email', locale()))->queue((new ContactNotified($this->contact))->delay(30));
     }
 }

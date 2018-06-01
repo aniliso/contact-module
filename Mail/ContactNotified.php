@@ -34,10 +34,12 @@ class ContactNotified extends Mailable
     public function build()
     {
         $contact = $this->contact;
+        if(setting('contact::contact-to-cc')) {
+            $this->cc(explode(',', setting('contact::contact-to-cc')));
+        }
         return $this->view('contact::emails.html.enquiry')
                     ->from(setting('contact::contact-to-email'), setting('contact::contact-to-name'))
                     ->replyTo($contact->email, $contact->first_name.' '.$contact->last_name)
-                    ->cc(explode(',', setting('contact::contact-to-cc')))
                     ->subject(setting('contact::contact-to-subject', locale()))
                     ->with(compact('contact'));
     }

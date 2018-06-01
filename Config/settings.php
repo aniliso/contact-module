@@ -25,5 +25,15 @@ return [
         'description'  => 'contact::settings.contact-email-check',
         'view'         => 'checkbox',
         'translatable' => false,
+    ],
+    'contact-map-lat' => [
+        'description'  => 'contact::settings.contact-map-lat',
+        'view'         => 'text',
+        'translatable' => false
+    ],
+    'contact-map-lng' => [
+        'description'  => 'contact::settings.contact-map-lng',
+        'view'         => 'text',
+        'translatable' => false
     ]
 ];

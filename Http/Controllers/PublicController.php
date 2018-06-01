@@ -1,7 +1,10 @@
 <?php namespace Modules\Contact\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer;
 use Modules\Contact\Http\Requests\ContactRequest;
+use Modules\Contact\Jobs\SendContactEmail;
+use Modules\Contact\Jobs\SendGuestEmail;
 use Modules\Contact\Repositories\ContactRepository;
 use Modules\Core\Http\Controllers\BasePublicController;
 use Modules\Setting\Contracts\Setting;
@@ -61,19 +64,21 @@ class PublicController extends BasePublicController
         return view('contact::index');
     }
 
-    public function send(Mailer $mailer, ContactRequest $request)
+    public function send(ContactRequest $request)
     {
-        $mailer->send(config('asgard.contact.config.mail.views'), $request->all(), function ($message) use ($request) {
-            $message->to(
-                $this->setting->get('contact::contact-to-email', locale()),
-                $this->setting->get('contact::contact-to-name', locale())
-            );
-            $message->replyTo($request->email, $request->first_name.' '.$request->last_name);
-            $message->subject($this->setting->get('contact::contact-to-subject', locale()));
-        });
-
-        $this->contact->create($request->all());
+        if($contact = $this->contact->create($request->all())) {
+            $this->_sendMail($contact);
+        }
 
         return redirect($request->get('from'))->with('contact_form_message', trans('contact::contacts.sent_message'));
+    }
+
+    private function _sendMail($model)
+    {
+        SendContactEmail::dispatch($model)
+            ->delay(Carbon::now()->addSecond(10));
+
+        SendGuestEmail::dispatch($model)
+            ->delay(Carbon::now()->addSecond(15));
     }
 }

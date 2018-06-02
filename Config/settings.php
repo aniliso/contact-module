@@ -26,6 +26,11 @@ return [
         'view'         => 'checkbox',
         'translatable' => false,
     ],
+    'contact-map-key' => [
+        'description'  => 'contact::settings.contact-map-key',
+        'view'         => 'text',
+        'translatable' => false
+    ],
     'contact-map-lat' => [
         'description'  => 'contact::settings.contact-map-lat',
         'view'         => 'text',

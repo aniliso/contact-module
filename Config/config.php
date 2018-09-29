@@ -25,7 +25,7 @@ return [
         'phone'                => 'required',
         'email'                => 'required|email',
         'enquiry'              => 'required',
-        'g-recaptcha-response' => 'required|captcha'
+        'captcha_contact'      => 'required|captcha'
     ],
     'mail'   => [
         'views' => [

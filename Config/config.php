@@ -27,6 +27,7 @@ return [
         'enquiry'              => 'required',
         'captcha_contact'      => 'required|captcha'
     ],
+    'except_rules' => ['captcha_contact'],
     'mail'   => [
         'views' => [
             'contact::emails.html.enquiry',

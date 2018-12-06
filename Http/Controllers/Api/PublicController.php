@@ -5,6 +5,7 @@ namespace Modules\Contact\Http\Controllers\Api;
 use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\Response;
+use Modules\Contact\Http\Requests\CallRequest;
 use Modules\Contact\Http\Requests\ContactRequest;
 use Modules\Contact\Jobs\SendContactEmail;
 use Modules\Contact\Jobs\SendGuestEmail;
@@ -79,5 +80,42 @@ class PublicController extends BasePublicController
 
 //        \Mail::to(setting('contact::contact-to-email', locale()))->queue((new ContactNotified($model))->delay(30));
 //        \Mail::to($model->email)->queue((new GuestNotified($model))->delay(60));
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function call(Mailer $mailer, CallRequest $request)
+    {
+        try {
+            if($this->setting->get('contact::contact-email-check')) {
+                if($model = $this->contact->findByAttributes(['email'=>$request->get('email')])) {
+                    $this->_sendMail($model);
+                    return response()->json([
+                        'success' => true,
+                        'data'    => json_decode($model),
+                        'message' => trans('themes::contact.messages.has registered')
+                    ]);
+                }
+            }
+            if($model = $this->contact->create($request->all())) {
+                $this->_sendMail($model);
+            } else {
+                throw new \Exception(trans('themes::contact.messages.error'));
+            }
+            return response()->json([
+                'success' => true,
+                'data'    => json_decode($model),
+                'message' => trans('themes::contact.messages.success')
+            ]);
+        }
+        catch (\Exception $exception) {
+            \Log::critical($exception->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => trans('themes::contact.messages.error')
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

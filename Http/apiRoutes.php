@@ -8,4 +8,8 @@ $router->group(['prefix' => LaravelLocalization::transRoute('contact::routes.con
         'uses' => 'PublicController@send',
         'as'   => 'api.contact.send'
     ]);
+    $router->post('call', [
+        'uses' => 'PublicController@call',
+        'as'   => 'api.contact.call'
+    ]);
 });

@@ -2,10 +2,9 @@
 
 namespace Modules\Contact\Http\Controllers\Api;
 
-use Carbon\Carbon;
 use Illuminate\Http\Response;
-use Modules\Contact\Http\Requests\CallRequest;
-use Modules\Contact\Http\Requests\ContactRequest;
+use Modules\Contact\Http\Requests\ApiCallRequest;
+use Modules\Contact\Http\Requests\ApiContactRequest;
 use Modules\Contact\Jobs\SendContactEmail;
 use Modules\Contact\Jobs\SendGuestEmail;
 use Modules\Contact\Repositories\ContactRepository;
@@ -35,7 +34,7 @@ class PublicController extends BasePublicController
      * Display a listing of the resource.
      * @return Response
      */
-    public function send(ContactRequest $request)
+    public function send(ApiContactRequest $request)
     {
         try {
             if($this->setting->get('contact::contact-email-check')) {
@@ -73,7 +72,7 @@ class PublicController extends BasePublicController
      * Display a listing of the resource.
      * @return Response
      */
-    public function call(CallRequest $request)
+    public function call(ApiCallRequest $request)
     {
         try {
             if($this->setting->get('contact::contact-email-check')) {

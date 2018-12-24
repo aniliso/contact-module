@@ -33,7 +33,8 @@ class GuestNotified extends Mailable
     public function build()
     {
         $contact = $this->contact;
-        return $this->view('contact::emails.html.guest')
+
+        return $this->markdown('contact::emails.guest')
                     ->from(setting('contact::contact-to-email'), setting('contact::contact-to-name'))
                     ->subject(setting('contact::contact-to-subject', locale()))
                     ->replyTo(setting('contact::contact-to-email', locale()), setting('contact::contact-to-name', locale()))

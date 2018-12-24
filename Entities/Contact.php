@@ -16,4 +16,9 @@ class Contact extends Model
         $this->fillable = array_merge($this->fillable, array_keys(config('asgard.contact.config.fields')));
         parent::__construct($attributes);
     }
+
+    public function getFullNameAttribute()
+    {
+        return $this->getAttribute('first_name') . ' ' . $this->getAttribute('last_name');
+    }
 }

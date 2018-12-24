@@ -41,4 +41,9 @@ return [
     'edit resource'    => 'İletişim Düzenle',
     'update resource'  => 'İletişim Güncelle',
     'destroy resource' => 'İletişim Sil',
+    'messages' => [
+        'send success' => 'Bizimle iletişime geçtiğiniz için teşekkür ederiz, en kısa zamanda geri dönüş yapacağız.',
+        'send error'   => 'İletişim formunda bir hata oluştu. Lütfen tekrar deneyiniz.',
+        'create error' => 'İletişim postası gönderilirken bir hata oluştu',
+    ]
 ];

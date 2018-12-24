@@ -25,9 +25,23 @@ return [
         'phone'                => 'required',
         'email'                => 'required|email',
         'enquiry'              => 'required',
+        'g-recaptcha-response' => 'required|captcha'
+    ],
+    'api_rules' => [
+        'first_name'           => 'required',
+        'last_name'            => 'required',
+        'phone'                => 'required',
+        'email'                => 'required|email',
+        'enquiry'              => 'required',
         'captcha_contact'      => 'required|captcha'
     ],
-    'except_rules' => ['captcha_contact'],
+    'api_call_rules' => [
+        'first_name'           => 'required',
+        'last_name'            => 'required',
+        'phone'                => 'required',
+        'email'                => 'required|email',
+        'enquiry'              => 'required'
+    ],
     'mail'   => [
         'views' => [
             'contact::emails.html.enquiry',

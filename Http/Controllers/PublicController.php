@@ -9,6 +9,7 @@ use Modules\Contact\Repositories\ContactRepository;
 use Modules\Core\Http\Controllers\BasePublicController;
 use Modules\Setting\Contracts\Setting;
 use Breadcrumbs;
+use DB;
 
 class PublicController extends BasePublicController
 {
@@ -64,21 +65,27 @@ class PublicController extends BasePublicController
         return view('contact::index');
     }
 
+    /**
+     * @param ContactRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Throwable
+     */
     public function send(ContactRequest $request)
     {
-        if($contact = $this->contact->create($request->all())) {
-            $this->_sendMail($contact);
+        try {
+            DB::transaction(function() use($request){
+                if($contact = $this->contact->create($request->all())) {
+                    SendContactEmail::dispatch($contact);
+                    SendGuestEmail::dispatch($contact);
+                } else {
+                    throw new \Exception(trans('contact::contacts.messages.create error'));
+                }
+            });
+            return redirect($request->get('from'))->withSuccess(trans('contact::contacts.messages.send success'));
         }
-
-        return redirect($request->get('from'))->with('contact_form_message', trans('contact::contacts.sent_message'));
-    }
-
-    private function _sendMail($model)
-    {
-        SendContactEmail::dispatch($model)
-            ->delay(Carbon::now()->addSecond(10));
-
-        SendGuestEmail::dispatch($model)
-            ->delay(Carbon::now()->addSecond(15));
+        catch (\Exception $exception) {
+            DB::rollBack();
+            return redirect($request->get('from'))->withErrors($exception->getMessage());
+        }
     }
 }

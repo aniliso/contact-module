@@ -19,6 +19,9 @@ return [
         'enquiry'              => 'Your message',
         'g-recaptcha-response' => 'Security Code',
         'submit'               => 'Send!',
+        'terms'                => 'Terms',
+        'ip'                   => 'IP',
+        'captcha_contact'      => 'Security Code'
     ],
     'button'       => [
         'create contact' => 'Add Contact'
@@ -38,4 +41,9 @@ return [
     'edit resource'    => 'Edit Contact',
     'update resource'  => 'Update Contact',
     'destroy resource' => 'Delete Contact',
+    'messages' => [
+        'send success' => 'Thank you for contacting us, we will be communicate with you as soon as possible.',
+        'send error'   => 'An error has occurred in the contact form. Please try again later.',
+        'create error' => 'There was an error sending message mail.',
+    ]
 ];

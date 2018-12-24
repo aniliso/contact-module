@@ -27,7 +27,6 @@ class ContactServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBindings();
-        $this->registerWidgets();
 
         $this->app->register(\Cornford\Googlmapper\MapperServiceProvider::class);
 
@@ -69,52 +68,11 @@ class ContactServiceProvider extends ServiceProvider
             'Modules\Contact\Repositories\ContactRepository',
             function () {
                 $repository = new EloquentContactRepository(new Contact());
-
                 if (!config('app.cache')) {
                     return $repository;
                 }
-
                 return new CacheContactDecorator($repository);
             }
         );
-    }
-
-    private function registerWidgets()
-    {
-        \Widget::register('gmap', function ($height, $zoom, $marker='', array $options=[]) {
-            if(setting('theme::address')) {
-                if(!$map = \Cache::get('contact.map')) {
-                    \Mapper::setLanguage(locale());
-                    \Mapper::setRegion('TR');
-                    if($marker) {
-                        \Mapper::setIcon(\Theme::url($marker));
-                    }
-                    \Mapper::setAnimation('DROP');
-                    $location = \Mapper::location(strip_tags(setting('theme::address')));;
-                    $location->map([
-                        'height'            => $height,
-                        'zoom'              => $zoom,
-                        'async'             => true,
-                        'center'            => true,
-                        'marker'            => true,
-                        'type'              => 'ROADMAP',
-                        'draggable'         => isset($options['draggable']) ? $options['draggable'] : false,
-                        'scrollWheelZoom'   => isset($options['scrollzoom']) ? $options['scrollzoom'] : false,
-                        'fullscreenControl' => isset($options['fullscreen']) ? $options['fullscreen'] : false,
-                        'zoomControl'       => isset($options['zoomcontrol']) ? $options['zoomcontrol'] : false,
-                        'streetViewControl' => false,
-                        'content'           => setting('theme::company-name')."<br/>".setting('theme::address'),
-                        'markers'           => [
-                            'title' => setting('theme::company-name')
-                        ]
-                    ]);
-                    if(isset($options['streetview']))
-                        \Mapper::streetview($location->getLatitude(), $location->getLongitude(), 250, 1, ['ui'=>false, 'zoom'=>1]);
-                        $map = \Mapper::render();
-                        \Cache::put('contact.map', $map, 3600);
-                }
-                return $map;
-            }
-        });
     }
 }

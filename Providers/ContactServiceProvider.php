@@ -28,11 +28,6 @@ class ContactServiceProvider extends ServiceProvider
     {
         $this->registerBindings();
 
-        $this->app->register(\Cornford\Googlmapper\MapperServiceProvider::class);
-
-        $aliasLoader = AliasLoader::getInstance();
-        $aliasLoader->alias('Mapper', \Cornford\Googlmapper\Facades\MapperFacade::class);
-
         $this->app->extend('asgard.ModulesList', function($app) {
             array_push($app, 'contact');
             return $app;

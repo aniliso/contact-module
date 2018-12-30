@@ -40,7 +40,6 @@ class ContactNotified extends Mailable
         }
 
         return $this->markdown('contact::emails.contact')
-                    ->from(setting('contact::contact-to-email'), setting('contact::contact-to-name'))
                     ->replyTo($contact->email, $contact->fullname)
                     ->subject(setting('contact::contact-to-subject', locale()))
                     ->with(compact('contact'));

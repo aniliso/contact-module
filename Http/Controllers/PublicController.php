@@ -1,7 +1,5 @@
 <?php namespace Modules\Contact\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Contracts\Mail\Mailer;
 use Modules\Contact\Http\Requests\ContactRequest;
 use Modules\Contact\Jobs\SendContactEmail;
 use Modules\Contact\Jobs\SendGuestEmail;
@@ -40,7 +38,7 @@ class PublicController extends BasePublicController
 
         /* Start Seo */
         $title = trans('themes::contact.title');
-        $url   = getURLFromRouteNameTranslated($this->locale, 'contact::routes.contact');
+        $url   = localize_trans_url($this->locale, 'contact::routes.contact');
 
         $this->setTitle($title)
             ->setDescription($title);

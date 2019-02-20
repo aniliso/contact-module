@@ -18,7 +18,7 @@ class SitemapController extends BaseSitemapController
         $translations = [];
         foreach ($locales as $locale => $localeValues) {
             if ($locale == \LaravelLocalization::getCurrentLocale()) continue;
-            $translations[] = ['language'=>$locale, 'url'=>getURLFromRouteNameTranslated($locale, 'contact::routes.contact')];
+            $translations[] = ['language'=>$locale, 'url'=> localize_trans_url($locale, 'contact::routes.contact')];
         }
         $this->sitemap->add(route('contact'), \Carbon\Carbon::now(), '0.8', 'weekly', [], null, $translations);
         return $this->sitemap->render('xml');

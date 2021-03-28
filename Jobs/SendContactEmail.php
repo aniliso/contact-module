@@ -35,6 +35,6 @@ class SendContactEmail implements ShouldQueue
      */
     public function handle()
     {
-        \Mail::to(setting('contact::contact-to-email', locale()))->queue((new ContactNotified($this->contact))->delay(5));
+        \Mail::to($this->contact->present()->subjectEmail)->queue((new ContactNotified($this->contact))->delay(5));
     }
 }

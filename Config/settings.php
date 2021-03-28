@@ -21,6 +21,11 @@ return [
         'view'         => 'text',
         'translatable' => true,
     ],
+    'contact-subjects' => [
+        'description'  => 'contact::settings.contact-subjects',
+        'view'         => 'textarea',
+        'translatable' => true,
+    ],
     'contact-email-check' => [
         'description'  => 'contact::settings.contact-email-check',
         'view'         => 'checkbox',

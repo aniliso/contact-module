@@ -47,6 +47,9 @@
                             </td>
                             @foreach($fillables->except('enquiry') as $fillable)
                             <td>
+                                @if($fillable == 'subject')
+                                {!! $contact->present()->subjectTitle !!}
+                                @endif
                                 {!! $contact->{$fillable} !!}
                             </td>
                             @endforeach

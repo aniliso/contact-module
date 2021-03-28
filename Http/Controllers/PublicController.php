@@ -1,5 +1,6 @@
 <?php namespace Modules\Contact\Http\Controllers;
 
+use Modules\Contact\Entities\Subject;
 use Modules\Contact\Http\Requests\ContactRequest;
 use Modules\Contact\Jobs\SendContactEmail;
 use Modules\Contact\Jobs\SendGuestEmail;
@@ -19,16 +20,27 @@ class PublicController extends BasePublicController
      * @var ContactRepository
      */
     private $contact;
+    /**
+     * @var Subject
+     */
+    private $subject;
 
     /**
      * ContactController constructor.
      * @param Setting $setting
      */
-    public function __construct(Setting $setting, ContactRepository $contact)
+    public function __construct(
+        Setting $setting,
+        ContactRepository $contact,
+        Subject $subject
+    )
     {
         parent::__construct();
         $this->setting = $setting;
         $this->contact = $contact;
+        $this->subject = $subject;
+
+        view()->share('subjects', $this->subject->list());
     }
 
     public function index()

@@ -21,7 +21,8 @@ return [
         'submit'               => 'Gönder',
         'terms'                => 'Şartlar',
         'ip'                   => 'IP Adresi',
-        'captcha_contact'      => 'Doğrulama Kodu'
+        'captcha_contact'      => 'Doğrulama Kodu',
+        'subject'              => 'Konu'
     ],
     'button'           => [
         'create contact' => 'İletişim Ekle'

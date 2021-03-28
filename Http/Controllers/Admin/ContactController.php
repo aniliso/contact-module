@@ -1,6 +1,7 @@
 <?php namespace Modules\Contact\Http\Controllers\Admin;
 
 use Modules\Contact\Entities\Contact;
+use Modules\Contact\Entities\Subject;
 use Modules\Contact\Http\Requests\ContactRequest;
 use Modules\Contact\Repositories\ContactRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
@@ -28,6 +29,9 @@ class ContactController extends AdminBaseController
         $contacts = Contact::query();
         if(request()->ajax()) {
             return \Datatables::of($contacts)
+                ->editColumn('subject', function($contact){
+                    return $contact->present()->subjectTitle;
+                })
                 ->addColumn('action', function ($contact) {
                     $action_buttons =   \Html::decode(link_to(
                         route('admin.contact.contact.edit',

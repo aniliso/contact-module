@@ -9,4 +9,5 @@ return [
     'contact-map-lat'     => 'Harita (Enlem)',
     'contact-map-lng'     => 'Harita (Boylam)',
     'contact-map-key'     => 'Harita (Google Map Anahtarı)',
+    'contact-subjects'    => 'Konu ve E-postalar'
 ];
